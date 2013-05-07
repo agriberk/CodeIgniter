@@ -288,7 +288,14 @@ class CI_Loader {
 			require_once($mod_path.'models/'.$path.$model.'.php');
 
 			$model = ucfirst($model);
-			$CI->$name = new $model();
+			
+			if (func_num_args() > 3) {
+				$refl = new ReflectionClass($model);
+				$CI->$name = $refl->newInstanceArgs(array_slice(func_get_args(), 3));
+				} else {
+					$CI->$name = new $model();
+					}
+					
 			$this->_ci_models[] = $name;
 			return;
 		}
